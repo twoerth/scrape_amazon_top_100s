@@ -1,0 +1,11 @@
+{
+  "name": "scrape_amazon_top_100",
+  "version": "0.0.1",
+  "description": "scrape different top 100 pages on amazon",
+  "main": "scrape.js",
+  "author": "TW",
+  "dependencies": {
+    "request": "latest",
+    "cheerio": "latest"
+  }
+}
