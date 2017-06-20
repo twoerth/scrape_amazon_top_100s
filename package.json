@@ -5,7 +5,8 @@
   "main": "scrape.js",
   "author": "TW",
   "dependencies": {
-    "request": "latest",
-    "cheerio": "latest"
+    "cheerio": "latest",
+    "elasticsearch": "^13.1.1",
+    "request": "latest"
   }
 }
