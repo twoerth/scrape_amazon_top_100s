@@ -13,7 +13,7 @@ exports.find_product = ( country, category, type, page, html ) => {
             category: category,
             type: type,
             page: page,
-            rank: p_p.find(".zg_rankNumber").text().trim(),
+            rank: parseInt( p_p.find(".zg_rankNumber").text().trim().replace(/\.$/g, '') ),
             change: p_p.find(".zg_salesMovement").text(),
             url: p_p.find(".p13n-asin a").first().attr('href'),
             title: p_p.find(".p13n-asin img").first().attr('alt'),

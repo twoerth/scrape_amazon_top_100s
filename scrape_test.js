@@ -2,7 +2,10 @@
 
 const fs = require('fs');
 const scrape = require('./scrape.js');
+const _ = require('lodash');
 const request = require('request');
+const rp = require('request-promise-native');
+
 
 var elasticsearch = require('elasticsearch');
 
@@ -11,6 +14,20 @@ var client = new elasticsearch.Client({
 	requestTimeout: Infinity, // Tested
 	keepAlive: true // Tested
 });
+
+const pushWithRetries = (ops) => {
+	client.bulk(
+		{
+			body: ops
+		},
+		function(error, response) {
+			console.log( error )
+			if( response.errors ) {
+				console.log( JSON.stringify( response ) );	
+			}
+		}
+	);	
+}
 
 /*
 fs.readFile('test_data/ms_elec_0.html', 'utf8', (err, data) => {
@@ -28,22 +45,12 @@ request( url, ( error, response, html ) => {
 })
 */
 
-for (const page of scrape.generate_urls("de")) {
+const INDEX = JSON.stringify( { index: { _index: 'myindex', _type: 'mytype' } } ) + "\n"
 
+_.each( scrape.generate_urls("de"), (page) => {
 	request(page.url, (error, response, html) => {
-		const ops = []
-		for( const doc of scrape.find_product(page.country, page.category, page.type, page.page, html) ) {
-			ops.push({ index: { _index: 'myindex', _type: 'mytype' } })
-			ops.push( doc )
-		}
-		client.bulk(
-			{
-				body: ops
-			},
-			function(error, response) {
-				console.log( error );
-			}
-		);
-		
+		return _.map( scrape.find_product(page.country, page.category, page.type, page.page, html), ( doc ) => {
+			fs.appendFile("amazon.json", INDEX + JSON.stringify( doc ) + "\n" );
+		});
 	});
-}
+})

@@ -7,6 +7,8 @@
   "dependencies": {
     "cheerio": "latest",
     "elasticsearch": "^13.1.1",
-    "request": "latest"
+    "lodash": "^4.17.4",
+    "request": "latest",
+    "request-promise-native": "^1.0.4"
   }
 }
